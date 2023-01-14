@@ -4,6 +4,7 @@ import User from "../../entities/user.entity";
 import AppError from "../../errors/AppError";
 import { IUserRequest, IUserResponse } from "../../interfaces/users.interfaces";
 import { returnUserSchema } from "../../serializers/users.serializers";
+import "dotenv/config";
 
 const createUserService = async (
   body: IUserRequest
@@ -34,9 +35,20 @@ const createUserService = async (
 
   //mes-dia-ano
   const [month, day, year] = body.birthdate.split("/").map(Number);
+  //produção: mêa/dia/ano
+  //dev: dia/mês/ano
+
+  let birthdate = ``;
+
+  if (process.env.NODE_ENV === "production") {
+    birthdate = `${month}-${day}-${year}`;
+  } else {
+    birthdate = `${day}-${month}-${year}`;
+  }
+
   const userCreation = userRepo.create({
     ...body,
-    birthdate: `${day}-${month}-${year}`,
+    birthdate: birthdate,
     account: accountCreate,
   });
 
