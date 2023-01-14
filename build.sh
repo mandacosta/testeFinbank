@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # exit on error
-set -o errexit
+# para não entrar em loop infinito de erro
+set -o errexit 
 
 yarn 
 yarn build
